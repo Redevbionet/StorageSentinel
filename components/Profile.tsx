@@ -20,9 +20,7 @@ export const Profile: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
           <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 p-1">
             <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://avatars.githubusercontent.com/u/212144175" 
-                
+            <img width="200" height="200" alt="image" src= "https://avatars.githubusercontent.com/u/212144175"
                 alt="Profile" 
                 className="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-500"
               />
