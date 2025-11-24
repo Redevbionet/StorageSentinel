@@ -1,0 +1,43 @@
+name: Insights docker image builder
+description: Builds and pushes insights docker image
+
+inputs:
+  app-env:
+    description: The APP_ENV to pass as a build argument
+    required: false
+    default: production
+
+outputs:
+  image:
+    description: Image that was built
+    value: ${{ steps.tag-generator.outputs.IMAGE_TAG }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get short commit sha hash
+      uses: benjlevesque/short-sha@v2.1
+      id: short-sha
+      with:
+        length: 6
+
+    - run: echo "IMAGE_VERSION=${{ steps.short-sha.outputs.sha }}.${{ github.run_attempt }}" >> $GITHUB_OUTPUT
+      shell: bash
+      id: version-generator
+
+    - run: echo "IMAGE_TAG=sjc.ocir.io/axbydjxa5zuh/insights-app:${{ steps.version-generator.outputs.IMAGE_VERSION }}" >> $GITHUB_OUTPUT
+      shell: bash
+      id: tag-generator
+
+    - name: Login to docker repository
+      shell: bash
+      run: echo '${{ env.ORACLE_DOCKER_PASSWORD }}' | docker login sjc.ocir.io -u '${{ env.ORACLE_DOCKER_USERNAME }}' --password-stdin
+
+    - name: Build and push docker image
+      shell: bash
+      run: |
+        BUILD_ARGS=$(env | grep -v '^PWD=' | grep -v '^HOME=' | grep -v '^GITHUB_' | awk -F= '{print "--build-arg " $1}')
+        docker build $BUILD_ARGS \
+          --build-arg APP_ENV=${{ inputs.app-env }} \
+          -t ${{ steps.tag-generator.outputs.IMAGE_TAG }} ./frontend
+        docker push ${{ steps.tag-generator.outputs.IMAGE_TAG }}
