@@ -6,16 +6,13 @@ import {
   BrainCircuit, 
   ShieldCheck, 
   HardDrive,
-  Activity
+  Activity,
+  Globe
 } from 'lucide-react';
 
 interface SidebarProps {
   currentView: ViewState;
   setView: (view: ViewState) => void;
-},
-interface AttackDetailModalProps {
- attack: Attack | null;
-  onClose: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
@@ -23,8 +20,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
     { id: ViewState.DASHBOARD, label: 'System Overview', icon: LayoutDashboard },
     { id: ViewState.SECURITY, label: 'Security & Protection', icon: ShieldCheck },
     { id: ViewState.LOG_ANALYSIS, label: 'AI Log Analyst', icon: BrainCircuit },
+    { id: ViewState.LFX_INSIGHTS, label: 'LFX Insights', icon: Globe },
     { id: ViewState.PROFILE, label: 'Engineer Profile', icon: User },
-    { id. ViewState.AttackDetailModal, label: 'Security & AttackDetailModal', icon: ShieldCheck },
   ];
 
   return (
